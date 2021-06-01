@@ -7,7 +7,7 @@ import 'package:biblios/widgets/list_livros.dart';
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
-  static const route = '/';
+  static const route = '/home';
 
   @override
   Widget build(BuildContext context) {

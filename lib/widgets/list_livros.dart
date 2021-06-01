@@ -55,8 +55,10 @@ class _ListLivrosState extends State<ListLivros> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: ElevatedButton(
                     onPressed: () => Navigator.pushNamed(
-                        context, FormLivro.route,
-                        arguments: {'title': 'add'}),
+                      context,
+                      FormLivro.route,
+                      arguments: {'title': 'add'},
+                    ),
                     child: Text('Adicionar Livro'),
                   ),
                 ),
@@ -72,7 +74,9 @@ class _ListLivrosState extends State<ListLivros> {
             ),
           )
         : livros.length == 0
-            ? LinearProgressIndicator()
+            ? LinearProgressIndicator(
+                color: amethyst,
+              )
             : mode == ListLivrosTipo.grid
                 ? GridLivro(
                     cardSize: cardSize,

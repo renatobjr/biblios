@@ -9,11 +9,11 @@ class CapituloProvider with ChangeNotifier {
   final baseUrl = 'http://192.168.1.6:3000/capitulos';
   //final baseUrl = 'http://192.168.27.112:3000/capitulos';
 
-  // ignore: missing_return
-  Future<Capitulo?> fetchAllCapitulos() async {
-    final res = await http.get(Uri.parse('$baseUrl/lista'));
-
-    if (res.statusCode == 200) {
+  Future<bool?> fetchAllCapitulos() async {
+    try {
+      final res = await http.get(
+        Uri.parse('$baseUrl/lista'),
+      );
       Iterable capitulosRes = json.decode(res.body);
       capitulos = capitulosRes
           .map(
@@ -21,8 +21,9 @@ class CapituloProvider with ChangeNotifier {
           )
           .toList();
       notifyListeners();
-    } else {
-      throw Exception('Não foi possível carregar a lista de capitulos');
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -45,8 +46,6 @@ class CapituloProvider with ChangeNotifier {
       ),
     );
 
-    print(res.body);
-
     if (res.statusCode == 200) {
       notifyListeners();
       return Capitulo.fromJson(
@@ -55,6 +54,68 @@ class CapituloProvider with ChangeNotifier {
     } else {
       print(terminado);
       throw Exception('err');
+    }
+  }
+
+  Capitulo getById(int id) {
+    return capitulos.firstWhere((c) => c.idCapitulo == id);
+  }
+
+  Future<Capitulo> updateCapitulo(
+      int idcapitulo,
+      int livro,
+      int pagina,
+      String tituloCapitulo,
+      String descricao,
+      int diaSemana,
+      int terminado) async {
+    final res = await http.put(
+      Uri.parse('$baseUrl/atualizar/$idcapitulo'),
+      headers: <String, String>{
+        'Content-type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'livro': livro,
+          'pagina': pagina,
+          'tituloCapitulo': tituloCapitulo,
+          'descricao': descricao,
+          'diaSemana': diaSemana,
+          'terminado': terminado,
+        },
+      ),
+    );
+
+    if (res.statusCode == 200) {
+      notifyListeners();
+      return Capitulo.fromJson(jsonDecode(res.body));
+    } else {
+      throw Exception('falha ao atualizar');
+    }
+  }
+
+  Future<void> isFinished(int idcapitulo, int terminado) async {
+    final res = await http.put(
+      Uri.parse('$baseUrl/terminado/$idcapitulo'),
+      headers: <String, String>{
+        'Content-type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, int>{'terminado': terminado},
+      ),
+    );
+
+    if (res.statusCode == 200) {
+      notifyListeners();
+    }
+  }
+
+  Future<void> delete(int idcapitulo) async {
+    final res = await http.delete(Uri.parse('$baseUrl/deletar/$idcapitulo'));
+
+    if (res.statusCode == 200) {
+      notifyListeners();
+      capitulos.removeWhere((c) => c.idCapitulo == idcapitulo);
     }
   }
 }

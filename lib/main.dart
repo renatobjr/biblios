@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:biblios/helpers/customColors.dart';
 
+import 'package:biblios/screens/splash_screen.dart';
+import 'package:biblios/screens/home.dart';
+import 'package:biblios/screens/livros.dart';
 import 'package:biblios/screens/capitulos.dart';
 import 'package:biblios/screens/form_capitulo.dart';
 import 'package:biblios/screens/form_livro.dart';
-import 'package:biblios/screens/livros.dart';
-import 'package:biblios/screens/home.dart';
 
 import 'package:provider/provider.dart';
 import 'package:biblios/providers/capitulo_provider.dart';
@@ -37,6 +38,7 @@ class Biblios extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Biblios',
+      home: SplashScreen(),
       routes: {
         Home.route: (_) => Home(),
         Livros.route: (_) => Livros(),

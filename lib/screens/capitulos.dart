@@ -15,7 +15,11 @@ class Capitulos extends StatelessWidget {
         title: Text('Capítulos'),
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, FormCapitulo.route),
+            onPressed: () => Navigator.pushNamed(
+              context,
+              FormCapitulo.route,
+              arguments: {'title': 'add'},
+            ),
             icon: Icon(Icons.add),
           )
         ],

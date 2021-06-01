@@ -35,6 +35,17 @@ class _FormCapituloState extends State<FormCapitulo> {
     {'id': 7, 'diaSemana': 'Domingo'},
   ];
 
+  @override
+  void didChangeDependencies() {
+    Map args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    if (args['idcapitulo'] != null)
+      _novoCapitulo = Provider.of<CapituloProvider>(context).getById(
+        args['idcapitulo'],
+      );
+    super.didChangeDependencies();
+  }
+
   void _salvarCapitulo() async {
     String? snackMsg;
     if (_capituloKey.currentState!.validate()) {
@@ -51,13 +62,23 @@ class _FormCapituloState extends State<FormCapitulo> {
         );
         snackMsg = 'Novo Capítulo adicionado com sucesso';
       } else {
-        print('ok');
+        await Provider.of<CapituloProvider>(context, listen: false)
+            .updateCapitulo(
+          _novoCapitulo.idCapitulo as int,
+          _novoCapitulo.livro as int,
+          _novoCapitulo.pagina as int,
+          _novoCapitulo.tituloCapitulo as String,
+          _novoCapitulo.descricao as String,
+          _novoCapitulo.diaSemana as int,
+          _novoCapitulo.terminado as int,
+        );
+        snackMsg = '${_novoCapitulo.tituloCapitulo} atualizado com sucesso';
       }
       Navigator.popAndPushNamed(context, Home.route);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: sushi,
-          content: Text(snackMsg!),
+          content: Text(snackMsg),
         ),
       );
     }
@@ -66,11 +87,16 @@ class _FormCapituloState extends State<FormCapitulo> {
   @override
   Widget build(BuildContext context) {
     final livros = Provider.of<LivroProvider>(context).livros;
+    final Map args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo Capítulo'),
-      ),
+          title: args['title'] == 'add'
+              ? Text('Novo Capítulo')
+              : Text(
+                  args['title'],
+                )),
       body: Form(
         key: _capituloKey,
         child: Padding(
@@ -231,7 +257,9 @@ class _FormCapituloState extends State<FormCapitulo> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: ElevatedButton(
                   onPressed: () => _salvarCapitulo(),
-                  child: Text('Salvar Capítulo'),
+                  child: args['title'] == 'add'
+                      ? Text('Salvar Capítulo')
+                      : Text('Atualizar ${_novoCapitulo.tituloCapitulo}'),
                 ),
               )
             ],

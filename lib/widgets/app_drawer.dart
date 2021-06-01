@@ -1,3 +1,4 @@
+import 'package:biblios/helpers/customColors.dart';
 import 'package:biblios/providers/livro_provider.dart';
 import 'package:biblios/screens/capitulos.dart';
 import 'package:flutter/material.dart';
@@ -16,29 +17,77 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          ListTile(
-            trailing: Icon(Icons.home),
-            title: Text('Home'),
-            onTap: () => Navigator.pushNamed(context, Home.route),
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Container(
+              height: 114,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/assets/img/biblios.png'),
+                ),
+              ),
+            ),
           ),
-          livros.length == 0
-              ? Text('')
-              : ListTile(
-                  trailing: Icon(Icons.menu_book),
-                  title: Text('Livros'),
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    Livros.route,
-                    arguments: {'mode': 'grid'},
+          Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+              ),
+              color: amethyst,
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 60.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.home,
+                      color: ghostWhite,
+                    ),
+                    title: Text(
+                      'Home',
+                      style: TextStyle(color: ghostWhite),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, Home.route),
                   ),
                 ),
-          livros.length == 0
-              ? Text('')
-              : ListTile(
-                  trailing: Icon(Icons.book_rounded),
-                  title: Text('Capítulos'),
-                  onTap: () => Navigator.pushNamed(context, Capitulos.route),
-                )
+                livros.length == 0
+                    ? Text('')
+                    : ListTile(
+                        leading: Icon(
+                          Icons.menu_book,
+                          color: ghostWhite,
+                        ),
+                        title: Text(
+                          'Livros',
+                          style: TextStyle(color: ghostWhite),
+                        ),
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          Livros.route,
+                          arguments: {'mode': 'grid'},
+                        ),
+                      ),
+                livros.length == 0
+                    ? Text('')
+                    : ListTile(
+                        leading: Icon(
+                          Icons.book_rounded,
+                          color: ghostWhite,
+                        ),
+                        title: Text(
+                          'Capítulos',
+                          style: TextStyle(
+                            color: ghostWhite,
+                          ),
+                        ),
+                        onTap: () =>
+                            Navigator.pushNamed(context, Capitulos.route),
+                      )
+              ],
+            ),
+          ),
         ],
       ),
     );

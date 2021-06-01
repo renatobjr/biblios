@@ -9,13 +9,11 @@ class LivroProvider with ChangeNotifier {
   final baseUrl = 'http://192.168.1.6:3000/livros';
   //final baseUrl = 'http://192.168.27.112:3000/livros';
 
-  // ignore: missing_return
-  Future<Livro?> fetchAllLivros() async {
-    final res = await http.get(
-      Uri.parse('$baseUrl/lista'),
-    );
-
-    if (res.statusCode == 200) {
+  Future<bool?> fetchAllLivros() async {
+    try {
+      final res = await http.get(
+        Uri.parse('$baseUrl/lista'),
+      );
       Iterable livrosRes = json.decode(res.body);
       livros = livrosRes
           .map(
@@ -23,8 +21,9 @@ class LivroProvider with ChangeNotifier {
           )
           .toList();
       notifyListeners();
-    } else {
-      throw Exception('Não foi possível carregar a lista de livros');
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
